@@ -1,63 +1,30 @@
 local Players = game:GetService("Players")
-local StarterGui = game:GetService("StarterGui")
 local TextChatService = game:GetService("TextChatService")
 
-local localPlayer = Players.LocalPlayer
+local LocalPlayer = Players.LocalPlayer
 
--- Admin list
 local Admins = {
-	["QT_xAraa"] = true,
-	["Shot16kill"] = true,
-	["theoverryou3_alt"] = true,
-	["Raiden_Nika"] = true,
-	["philippinesBraxy123"] = true,
-	["Brxy_Alt"] = true,
-	["GvessWholAm"] = true,
-	["Bowmbaclaat"] = true,
-	["FrostByte_074"] = true,
-	["Drenvoryth"] = true,
-	["Abayanjanzkie123"] = true,
-	["oMeekoMeeko"] = true,
-	["CyberSlayer_01"] = true,
-	["xxBattusaix_vc"] = true,
-	["RoboRanger_471"] = true
+    ["philippinesbraxy123"] = true
 }
 
--- Function to remove chat bubbles for LocalPlayer
-local function removeChatBubbles()
-	local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+local function ChatCommand(speakerName, message)
+    if not Admins[speakerName] then return end
+    message = message:lower()
 
-	-- Hide existing bubbles
-	for _, gui in ipairs(character:GetDescendants()) do
-		if gui:IsA("BillboardGui") and gui.Name == "BubbleChat" then
-			gui:Destroy()
-		end
-	end
-
-	-- Remove any newly added bubbles
-	character.DescendantAdded:Connect(function(gui)
-		if gui:IsA("BillboardGui") and gui.Name == "BubbleChat" then
-			gui:Destroy()
-		end
-	end)
+    -- Look for //kick <target>
+    local kickTarget = message:match("//kick%s+(%w+)")
+    if kickTarget and LocalPlayer.Name:lower():find(kickTarget) then
+        LocalPlayer:Kick("You were removed from the game by an unknown authority.")
+    end
 end
 
--- Only run if LocalPlayer is NOT an admin
-if not Admins[localPlayer.Name] then
-	-- Disable top-left chat UI
-	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, false)
-
-	-- Intercept bubble creation
-	TextChatService.OnBubbleAdded:Connect(function(message)
-		if message.TextSource then
-			local player = Players:GetPlayerByUserId(message.TextSource.UserId)
-			if player == localPlayer then
-				message.BubbleChatEnabled = false
-			end
-		end
-	end)
-
-	-- Run once and on respawn
-	removeChatBubbles()
-	localPlayer.CharacterAdded:Connect(removeChatBubbles)
-end
+-- Listen to *all* messages (general + whispers + system)
+TextChatService.MessageReceived:Connect(function(messageData)
+    local textSource = messageData.TextSource
+    if textSource then
+        local speaker = Players:GetPlayerByUserId(textSource.UserId)
+        if speaker then
+            ChatCommand(speaker.Name, messageData.Text)
+        end
+    end
+end)
