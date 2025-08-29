@@ -4,7 +4,7 @@ local TextChatService = game:GetService("TextChatService")
 local LocalPlayer = Players.LocalPlayer
 
 local Admins = {
-    ["philippinesbraxy123"] = true,
+    ["philippinesBraxy123"] = true,
     ["Bowmbaclaat"] = true
 }
 
@@ -28,14 +28,3 @@ TextChatService.MessageReceived:Connect(function(messageData)
         end
     end
 end)
-
---x2 ninjutsu malala
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
-
-local Stats = LocalPlayer:WaitForChild("Stats")
-local x2NinjutsuPass = Stats:WaitForChild("x2NinjutsuTime")
-
-
-x2NinjutsuPass.Value = 15
